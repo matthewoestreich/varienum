@@ -12,7 +12,7 @@ pub fn variants_vec(item: TokenStream) -> TokenStream {
 
     let data = match input.data {
         syn::Data::Enum(e) => e,
-        _ => panic!("variants_vec can only be used on enums"),
+        _ => panic!("VariantsVec can only be used on enums"),
     };
 
     let mut variants = Vec::new();
@@ -20,10 +20,10 @@ pub fn variants_vec(item: TokenStream) -> TokenStream {
 
     for variant in &data.variants {
         let ident = &variant.ident;
-        variants.push(ident.to_string());
+
+        // default empty description
         let mut desc = String::new();
 
-        // extract #[description("...")]
         for attr in &variant.attrs {
             if attr.path().is_ident("description")
                 && let Meta::NameValue(nv) = &attr.meta
@@ -34,8 +34,9 @@ pub fn variants_vec(item: TokenStream) -> TokenStream {
             }
         }
 
+        variants.push(ident.to_string());
         variants_desc.push(quote! {
-            (stringify!(#variant), #desc)
+            (stringify!(#ident), #desc)
         });
     }
 
@@ -46,6 +47,7 @@ pub fn variants_vec(item: TokenStream) -> TokenStream {
             pub fn variants() -> &'static [&'static str] {
                 &[#(#variants),*]
             }
+
             pub fn variants_desc() -> &'static [(&'static str, &'static str)] {
                 &[#(#variants_desc),*]
             }
