@@ -4,8 +4,8 @@ use proc_macro::TokenStream;
 use quote::quote;
 use syn::{DeriveInput, Meta, parse_macro_input};
 
-#[proc_macro_attribute]
-pub fn variants_vec(_attr: TokenStream, item: TokenStream) -> TokenStream {
+#[proc_macro_derive(VariantsVec, attributes(description))]
+pub fn variants_vec(item: TokenStream) -> TokenStream {
     let input = parse_macro_input!(item as DeriveInput);
     let input_clone = input.clone();
     let enum_name = input.ident;
