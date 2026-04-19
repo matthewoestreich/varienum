@@ -7,6 +7,7 @@ use syn::{DeriveInput, Meta, parse_macro_input};
 #[proc_macro_attribute]
 pub fn variants_vec(_attr: TokenStream, item: TokenStream) -> TokenStream {
     let input = parse_macro_input!(item as DeriveInput);
+    let input_clone = input.clone();
     let enum_name = input.ident;
 
     let data = match input.data {
@@ -18,7 +19,8 @@ pub fn variants_vec(_attr: TokenStream, item: TokenStream) -> TokenStream {
     let mut variants_desc = Vec::new();
 
     for variant in &data.variants {
-        let name = variant.ident.to_string();
+        let ident = &variant.ident;
+        variants.push(ident.to_string());
         let mut desc = String::new();
 
         // extract #[description("...")]
@@ -32,23 +34,23 @@ pub fn variants_vec(_attr: TokenStream, item: TokenStream) -> TokenStream {
             }
         }
 
-        variants.push(name.clone());
         variants_desc.push(quote! {
             (stringify!(#variant), #desc)
         });
     }
 
     let expanded = quote! {
+        #input_clone
+
         impl #enum_name {
             pub fn variants() -> &'static [&'static str] {
                 &[#(#variants),*]
             }
-            pub fn variants_desc() -> Vec<(&'static str, &'static str)> {
-                vec![#(#variants_desc),*]
+            pub fn variants_desc() -> &'static [(&'static str, &'static str)] {
+                &[#(#variants_desc),*]
             }
         }
     };
 
     TokenStream::from(expanded)
 }
-
