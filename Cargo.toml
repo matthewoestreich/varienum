@@ -1,6 +1,6 @@
 [package]
 name = "varienum"
-version = "0.2.10"
+version = "0.2.11"
 edition = "2024"
 authors = ["Matt Oestreich"]
 description = "Runtime inspection of enum variants."
@@ -13,9 +13,8 @@ categories = [
 ] # See available categories here: https://crates.io/category_slugs
 
 [lib]
-proc-macro = true
+name = "varienum"
+path = "src/lib.rs"
 
 [dependencies]
-syn = { version = "2", features = ["full"] }
-quote = "1"
-proc-macro2 = "1"
+varienum-macro = "0.1.0"
