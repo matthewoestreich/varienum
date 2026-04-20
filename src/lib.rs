@@ -41,11 +41,11 @@ pub fn variants_vec(item: TokenStream) -> TokenStream {
 
     let expanded = quote! {
         impl VariantsVec for #enum_name {
-            pub fn variants() -> &'static [&'static str] {
+            fn variants() -> &'static [&'static str] {
                 &[#(#variants),*]
             }
 
-            pub fn variants_desc() -> &'static [(&'static str, &'static str)] {
+            fn variants_desc() -> &'static [(&'static str, &'static str)] {
                 &[#(#variants_desc),*]
             }
         }
@@ -53,3 +53,4 @@ pub fn variants_vec(item: TokenStream) -> TokenStream {
 
     TokenStream::from(expanded)
 }
+
