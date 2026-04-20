@@ -1,6 +1,6 @@
 [package]
 name = "varienum"
-version = "0.2.7"
+version = "0.2.8"
 edition = "2024"
 authors = ["Matt Oestreich"]
 description = "Runtime inspection of enum variants."
